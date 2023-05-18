@@ -6,7 +6,7 @@ class Level1 extends Phaser.Scene{
 
     }
     create(){
-       let b = this.add.circle(300, 700, 35, 0xfffff);
+       let b = this.add.circle(300, 775, 35, 0xfffff);
        let ball_obj = this.physics.add.existing(b, 0);
        this.ball = ball_obj.body;
        this.ball.setCollideWorldBounds(true);
@@ -15,7 +15,7 @@ class Level1 extends Phaser.Scene{
        this.ball.onOverlap = true;
        this.ball.onCollide = true;
 
-       let g = this.add.circle(this.game.config.width-200, 250, 150, 0xffffff);
+       let g = this.add.circle(this.game.config.width-200, 225, 125, 0xffffff);
        let g_obj = this.physics.add.existing(g, 0);
        this.goal = g_obj.body;
        this.goal.immovable = true;
@@ -145,7 +145,7 @@ class Level2 extends Phaser.Scene{
 
     }
     create(){
-       let b = this.add.circle(300, 700, 35, 0xfffff);
+       let b = this.add.circle(300, 775, 35, 0xfffff);
        let ball_obj = this.physics.add.existing(b, 0);
        this.ball = ball_obj.body;
        this.ball.setCollideWorldBounds(true);
@@ -154,10 +154,10 @@ class Level2 extends Phaser.Scene{
        this.ball.onOverlap = true;
        this.ball.onCollide = true;
 
-       let g = this.add.circle(this.game.config.width-200, 250, 150, 0xffffff);
+       let g = this.add.circle(this.game.config.width-200, 225, 125, 0xffffff);
        let g_obj = this.physics.add.existing(g, 0);
        this.goal = g_obj.body;
-       this.goal.immovable = true;
+       //this.goal.immovable = true;
        this.goal.allowGravity = false;
        this.goal.onOverlap = true;
 
@@ -179,10 +179,21 @@ class Level2 extends Phaser.Scene{
        this.leg.onCollide = true;
        
        //makin cones
-       let c1 = this.add.triangle(500, this.game.config.height-50, 0, 128, 128, 128, 74, 0, 0xffa500);
-       let c2 = this.add.triangle(700, this.game.config.height-50, 0, 128, 128, 128, 74, 0, 0xffa500);
-       let c3 = this.add.triangle(900, this.game.config.height-50, 0, 128, 128, 128, 74, 0, 0xffa500);
-       //ADD PHYSICS TO CONES!!
+    //    let c1 = this.add.triangle(500, this.game.config.height-50, 0, 128, 128, 128, 74, 0, 0xffa500);
+    //    let c1_obj = this.physics.add.existing(c1, 0);
+    //    let cone1 = c1_obj.body;
+    //    cone1.setCollideWorldBounds(true);
+
+    //    let c2 = this.add.triangle(700, this.game.config.height-50, 0, 128, 128, 128, 74, 0, 0xffa500);
+    //    let c2_obj = this.physics.add.existing(c2, 0);
+    //    let cone2 = c2_obj.body;
+    //    cone2.setCollideWorldBounds(true);
+
+    //    let c3 = this.add.triangle(900, this.game.config.height-50, 0, 128, 128, 128, 74, 0, 0xffa500);
+    //    let c3_obj = this.physics.add.existing(c3, 0);
+    //    let cone3 = c3_obj.body;
+    //    cone3.setCollideWorldBounds(true);
+
 
        this.physics.add.collider(
         this.ball, 
@@ -190,6 +201,8 @@ class Level2 extends Phaser.Scene{
         null,
         (ball, player)=>{
             this.touches++;
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.1)
         }
        );
 
@@ -199,17 +212,48 @@ class Level2 extends Phaser.Scene{
         null,
         (ball, leg)=>{
             this.touches++;
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.1)
         });
 
        this.cursors = this.input.keyboard.createCursorKeys();
+
        this.physics.add.overlap(this.ball, this.goal);
+
+       this.add.tween({
+        targets: g,
+        duration: 4000,
+        x: {from: 350, to: this.game.config.width-200},
+        yoyo: true,
+        repeat: -1,
+        ease: 'back.in'
+       })
+    //    this.physics.add.collider(this.ball, cone1);
+    //    this.physics.add.collider(this.ball, cone2);
+    //    this.physics.add.collider(this.ball, cone3);
+
+    //    this.physics.add.collider(cone1, cone2);
+    //    this.physics.add.collider(cone2, cone3);
+    //    this.physics.add.collider(cone1, cone3);
+
+    //    this.physics.add.collider(this.player, cone1);
+    //    this.physics.add.collider(this.player, cone2);
+    //    this.physics.add.collider(this.player, cone3);
+
+    //    this.physics.add.collider(this.leg, cone1);
+    //    this.physics.add.collider(this.leg, cone2);
+    //    this.physics.add.collider(this.leg, cone3);
+
+
+
        this.touches = 0;
     }
     update(){
-        this.physics.world.on('collide', () =>{
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.1)
-        })
+        // this.physics.world.on('collide', () =>{
+        //     this.ball.setVelocityY(-555);
+        //     this.ball.setBounce(1.1)A
+        //      MAYBE THIS CAN BE WHERE I PLAY AUDIO
+        // })
         this.physics.world.on('overlap', () =>{
             this.scene.start('l1_done', {touches: this.touches});
         })
@@ -231,6 +275,7 @@ class Level2 extends Phaser.Scene{
         if(this.cursors.space.isDown && this.player.onFloor()){
           this.player.setVelocityY(-400);
         } 
+
         this.input.keyboard.on('keydown-'+'R',()=>{
             this.scene.start('l2');
         })
