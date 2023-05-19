@@ -46,6 +46,7 @@ class Level1 extends Phaser.Scene{
         null,
         (ball, player)=>{
             this.touches++;
+            console.log(this.touches);
         }
        );
 
@@ -55,6 +56,7 @@ class Level1 extends Phaser.Scene{
         null,
         (ball, leg)=>{
             this.touches++;
+            console.log(this.touches);
         });
 
        this.cursors = this.input.keyboard.createCursorKeys();
@@ -64,7 +66,7 @@ class Level1 extends Phaser.Scene{
     update(){
         this.physics.world.on('collide', () =>{
             this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.1)
+            this.ball.setBounce(1.06)
         })
         this.physics.world.on('overlap', () =>{
             this.scene.start('l1_done', {touches: this.touches});
@@ -187,8 +189,8 @@ class Level2 extends Phaser.Scene{
         null,
         (ball, player)=>{
             this.touches++;
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.1)
+            // this.ball.setVelocityY(-555);
+            // this.ball.setBounce(1.1)
         }
        );
 
@@ -198,8 +200,8 @@ class Level2 extends Phaser.Scene{
         null,
         (ball, leg)=>{
             this.touches++;
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.1)
+            // this.ball.setVelocityY(-555);
+            // this.ball.setBounce(1.1)
         });
 
        this.cursors = this.input.keyboard.createCursorKeys();
@@ -215,11 +217,20 @@ class Level2 extends Phaser.Scene{
         ease: 'back.in'
        })
        this.touches = 0;
+       this.physics.world.on('collide', (ball, player) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06)
+        })
+        this.physics.world.on('collide', (ball, leg) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06)
+        })
     }
     update(){
         // this.physics.world.on('collide', () =>{
         //      MAYBE THIS CAN BE WHERE I PLAY AUDIO
         // })
+        
         this.physics.world.on('overlap', () =>{
             this.scene.start('l2_done', {touches: this.touches});
         })
@@ -338,7 +349,7 @@ class Level3 extends Phaser.Scene{
        this.leg.onOverlap = true;
        this.leg.onCollide = true;
 
-       let p2 = this.add.rectangle(this.game.config.width-300, this.game.config.height, 150, 200).setFillStyle(0x00ff00);
+       let p2 = this.add.rectangle(this.game.config.width-300, this.game.config.height, 150, 200).setFillStyle(0x0000ff);
        let player2_obj = this.physics.add.existing(p2, 0);
        this.player2 = player2_obj.body;
        this.player2.onOverlap = true;
@@ -346,25 +357,35 @@ class Level3 extends Phaser.Scene{
        this.player2.setBounce(0.2);
        this.player2.setCollideWorldBounds(true);
 
-       this.l2 = this.add.rectangle(this.game.config.width-710, this.game.config.height+75, 120, 35).setFillStyle(0x000000);
-       let leg2_obj = this.physics.add.existing(this.l2, 0);
-       this.leg2 = leg2_obj.body;
-       this.leg2.setCollideWorldBounds(true);
-       this.leg2.allowGravity = false;
-       //this.leg2.immovable = true;
-       this.leg2.onOverlap = true;
-       this.leg2.onCollide = true;
+    //    this.l2 = this.add.rectangle(this.game.config.width-510, this.game.config.height+75, 120, 35).setFillStyle(0x000000);
+    //    let leg2_obj = this.physics.add.existing(this.l2, 0);
+    //    this.leg2 = leg2_obj.body;
+    //    this.leg2.setCollideWorldBounds(true);
+    //    this.leg2.allowGravity = false;
+    //    //this.leg2.immovable = true;
+    //    this.leg2.onOverlap = true;
+    //    this.leg2.onCollide = true;
 
 
+    //    const distance = new Phaser.Math.Vector2();
+    //    const force = new Phaser.Math.Vector2();
+    //    const acceleration = new Phaser.Math.Vector2();
        
        this.physics.add.collider(
         this.ball, 
         this.player,
         null,
         (ball, player)=>{
+            //WORK ON THIS HERE, PLZ
+            // distance.copy(this.ball.center)//.subtract(pointer);
+            // force.copy(distance).setLength(5000000 / distance.lengthSq()).limit(1000);
+            // acceleration.copy(force).scale(1 / this.ball.mass);
+            // this.ball.velocity.add(acceleration);
+            if(this.ball.y > this.player.y){
             this.touches++;
             this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.1)
+            this.ball.setBounce(1.06)
+            }
         }
        );
 
@@ -373,27 +394,29 @@ class Level3 extends Phaser.Scene{
         this.leg,
         null,
         (ball, leg)=>{
+            if(this.ball.y > this.player.y || this.ball.y > this.leg){
             this.touches++;
             this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.1)
+            this.ball.setBounce(1.06)
+            }
         });
 
         //need to add colliders
 
-        this.physics.add.collider(
-            this.ball, 
-            this.leg2,
-            null,
-            (ball, leg2)=>{
-                this.ball.setVelocityY(0);
-                this.ball.setBounce(0.5)
-        });
+        // this.physics.add.collider(
+        //     this.ball, 
+        //     this.leg2,
+        //     null,
+        //     (ball)=>{
+        //         this.ball.setVelocityY(0);
+        //         this.ball.setBounce(0.5)
+        // });
 
         this.physics.add.collider(
             this.ball, 
             this.player2,
             null,
-            (ball, player2)=>{
+            (ball)=>{
                 this.ball.setVelocityY(0);
                 this.ball.setBounce(0.5)
         });
@@ -416,22 +439,22 @@ class Level3 extends Phaser.Scene{
        this.touches = 0;
 
        this.add.tween({
-        targets: this.player2,
+        targets: p2,
         duration: 2000,
         x: {from: this.game.config.width/3, to: this.game.config.width-300},
         yoyo:true,
         repeat: -1,
         ease: 'quint.out',
-        onYoyo(){
-            this.leg2.x = this.player2.x +155;
-        }
+        // onYoyo(){
+        //      this.l2.x = this.p2.x +155;
+        //  }
        })
 
        this.add.tween({
-        targets: this.player2, 
+        targets: p2, 
         duration: 2000,
         y: {from: this.player2.y, to: this.player2.y+150},
-        yoyo:true,
+        yoyo: true,
         repeat: -1,
         ease: 'quint.out'
        })
@@ -445,7 +468,7 @@ class Level3 extends Phaser.Scene{
         })
         
         this.leg.y = this.player.y+165;
-        this.leg2.y = this.player2.y+165
+       // this.leg2.y = this.player2.y+165
 
         if(this.cursors.left.isDown){
            this.player.setVelocityX(-400);
@@ -478,7 +501,9 @@ class Level3_Done extends Phaser.Scene{
     preload(){
 
     }
-
+    init(data){
+        this.touches = data.touches;
+    }
     create(){
         this.cameras.main.setBackgroundColor('#228b22');
         this.add.text(300, 400,"Number of Touches: " +this.touches).setFontSize(35);
@@ -542,6 +567,9 @@ class Click extends Phaser.Scene {
         this.input.keyboard.on('keydown-' + "T", ()=>{
             this.scene.start('l3');
         })
+        this.input.keyboard.on('keydown-' + 'C', () =>{
+            this.scene.start('controls')
+        })
         this.cameras.main.setBackgroundColor('#228b22');
         this.add.text(655, 540, "Click to begin.").setFontSize(55);
         this.input.on('pointerdown', () => {
@@ -599,7 +627,7 @@ class Title extends Phaser.Scene {
         });
     }
 }
-
+//MAKE THE CONTROLS SCREEN PLEASE
 class Controls extends Phaser.Scene{
     constructor(){
         super('controls');
@@ -607,7 +635,15 @@ class Controls extends Phaser.Scene{
 
     create(){
         this.cameras.main.setBackgroundColor('#228b22');
-        let back = this.add.text(655, 840, "Go back.").setFontSize(45);
+        let content = [
+            'Left Arrow Key: Move Left',
+            'Right Arrow Key: Move Right',
+            'Spacebar: Jump'
+        ]
+        this.add.text(355, 240, 'Objective: Control the soccer player to get the ball into the goal at the top of the screen!!').setFontSize(65).setWordWrapWidth(1500);
+        this.add.text(355, 540, "CONTROLS:").setFontSize(55);
+        this.add.text(355, 590, content).setFontSize(45);
+        let back = this.add.text(355, 840, "Go back.").setFontSize(45);
         back.setInteractive();
         back.alpha = 0.05;
         this.tweens.add({
