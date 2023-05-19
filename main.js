@@ -1,4 +1,3 @@
-//FIGURE OUT HOW TO GET AN ACCURATE COUNT FOR TOUCHES!!!!
 class Level1 extends Phaser.Scene{
     constructor(){
         super('l1')
@@ -46,8 +45,9 @@ class Level1 extends Phaser.Scene{
         this.player,
         null,
         (ball, player)=>{
-            this.touches++;
-            console.log(this.touches);
+            if(this.ball.y <= this.player.y || this.ball.y <= this.leg.y){
+                this.touches++;
+            }
         }
        );
 
@@ -56,8 +56,10 @@ class Level1 extends Phaser.Scene{
         this.leg,
         null,
         (ball, leg)=>{
-            this.touches++;
-            console.log(this.touches);
+            if(this.ball.y <= this.leg.y){
+                this.touches++;
+                console.log(this.touches);
+            }
         });
 
        this.cursors = this.input.keyboard.createCursorKeys();
@@ -91,7 +93,7 @@ class Level1 extends Phaser.Scene{
           this.player.setVelocityY(-250);
         } 
         this.input.keyboard.on('keydown-'+'R',()=>{
-            this.scene.start('test');
+            this.scene.start('l1');
         })
         
     }
@@ -113,7 +115,7 @@ class Level1_Done extends Phaser.Scene{
         this.add.text(300, 400,"Number of Touches: " +this.touches).setFontSize(35);
         this.add.text(this.game.config.width/3, 200, "LEVEL 1 COMPLETED!").setFontSize(65);
         this.add.text(300, 300, "You’re doing great, kid! A recruiter even noticed your skills. Show them what you got!!").setWordWrapWidth(1500).setFontSize(45);
-        this.add.text(300, 1000, "[Slide the ball to the left to keep going!]").setFontSize(35)
+        this.add.text(300, 1000, "[Slide the ball to the right to keep going!]").setFontSize(35)
         this.g = this.add.circle(this.game.config.width-200, this.game.config.height-200, 50, 0x000000);
         this.b = this.add.circle(300, this.game.config.height-200, 30, 0xfffff);
         
@@ -163,7 +165,6 @@ class Level2 extends Phaser.Scene{
        let g = this.add.circle(this.game.config.width-200, 225, 125, 0xffffff);
        let g_obj = this.physics.add.existing(g, 0);
        this.goal = g_obj.body;
-       //this.goal.immovable = true;
        this.goal.allowGravity = false;
        this.goal.onOverlap = true;
 
@@ -189,11 +190,8 @@ class Level2 extends Phaser.Scene{
         this.player,
         null,
         (ball, player)=>{
-            if(this.ball.y >= this.player.y){
+            if(this.ball.y <= this.player.y || this.ball.y<=this.leg.y){
                 this.touches++;
-                console.log(this.touches);
-                this.ball.setVelocityY(-555);
-                this.ball.setBounce(1.06)
             }
         }
        );
@@ -203,11 +201,8 @@ class Level2 extends Phaser.Scene{
         this.leg,
         null,
         (ball, leg)=>{
-            if(this.ball.y >= this.leg.y){//this.ball.y >= this.player.y || this.ball.y >= this.leg.y){
+            if(this.ball.y <= this.leg.y){
                 this.touches++;
-                console.log(this.touches);
-                this.ball.setVelocityY(-555);
-                this.ball.setBounce(1.06)
             }
         });
 
@@ -224,20 +219,17 @@ class Level2 extends Phaser.Scene{
         ease: 'back.in'
        })
        this.touches = 0;
-    //    this.physics.world.on('collide', (ball, player) =>{
-    //         this.ball.setVelocityY(-555);
-    //         this.ball.setBounce(1.06)
-    //     })
-    //     this.physics.world.on('collide', (ball, leg) =>{
-    //         this.ball.setVelocityY(-555);
-    //         this.ball.setBounce(1.06)
-    //     })
     }
     update(){
-        // this.physics.world.on('collide', () =>{
-        //      MAYBE THIS CAN BE WHERE I PLAY AUDIO
-        // })
-        
+        this.physics.world.on('collide', (ball, player) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06)
+        })
+        this.physics.world.on('collide', (ball, leg) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06)
+        })
+
         this.physics.world.on('overlap', () =>{
             this.scene.start('l2_done', {touches: this.touches});
         })
@@ -284,7 +276,7 @@ class Level2_Done extends Phaser.Scene{
         this.add.text(300, 400,"Number of Touches: " +this.touches).setFontSize(35);
         this.add.text(this.game.config.width/3, 200, "LEVEL 2 COMPLETED!").setFontSize(65);
         this.add.text(300, 300, "You’re doing amazing!! You’re off to the big leagues now, kid!").setWordWrapWidth(1500).setFontSize(45);
-        this.add.text(300, 1000, "[Slide the ball to the left to keep going!]").setFontSize(35)
+        this.add.text(300, 1000, "[Slide the ball to the right to keep going!]").setFontSize(35)
         this.g = this.add.circle(this.game.config.width-200, this.game.config.height-200, 50, 0x000000);
         this.b = this.add.circle(300, this.game.config.height-200, 30, 0xfffff);
         
@@ -307,7 +299,7 @@ class Level2_Done extends Phaser.Scene{
 
     update(){
         if(this.b.x == this.g.x){
-            this.scene.start('l3'); //change here, plz
+            this.scene.start('l3');
         }
     }
 
@@ -335,7 +327,6 @@ class Level3 extends Phaser.Scene{
        let g = this.add.circle(this.game.config.width-200, 225, 125, 0xffffff);
        let g_obj = this.physics.add.existing(g, 0);
        this.goal = g_obj.body;
-       //this.goal.immovable = true;
        this.goal.allowGravity = false;
        this.goal.onOverlap = true;
 
@@ -364,35 +355,13 @@ class Level3 extends Phaser.Scene{
        this.player2.setBounce(0.2);
        this.player2.setCollideWorldBounds(true);
 
-    //    this.l2 = this.add.rectangle(this.game.config.width-510, this.game.config.height+75, 120, 35).setFillStyle(0x000000);
-    //    let leg2_obj = this.physics.add.existing(this.l2, 0);
-    //    this.leg2 = leg2_obj.body;
-    //    this.leg2.setCollideWorldBounds(true);
-    //    this.leg2.allowGravity = false;
-    //    //this.leg2.immovable = true;
-    //    this.leg2.onOverlap = true;
-    //    this.leg2.onCollide = true;
-
-
-    //    const distance = new Phaser.Math.Vector2();
-    //    const force = new Phaser.Math.Vector2();
-    //    const acceleration = new Phaser.Math.Vector2();
-       
        this.physics.add.collider(
         this.ball, 
         this.player,
         null,
         (ball, player)=>{
-            //WORK ON THIS HERE, PLZ
-            // distance.copy(this.ball.center)//.subtract(pointer);
-            // force.copy(distance).setLength(5000000 / distance.lengthSq()).limit(1000);
-            // acceleration.copy(force).scale(1 / this.ball.mass);
-            // this.ball.velocity.add(acceleration);
-            if(this.ball.y >= this.player.y){
+            if((this.ball.y <= this.player.y || this.ball.y <= this.leg.y)){
             this.touches++;
-            console.log(this.touches);
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.06)
             }
         }
        );
@@ -402,36 +371,18 @@ class Level3 extends Phaser.Scene{
         this.leg,
         null,
         (ball, leg)=>{
-            if(this.ball.y >= this.leg.y){//this.ball.y >= this.player.y || this.ball.y >= this.leg.y){
+            if(this.ball.y < this.leg.y){
             this.touches++;
-            console.log(this.touches);
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.06)
             }
         });
-
-        //need to add colliders
-
-        // this.physics.add.collider(
-        //     this.ball, 
-        //     this.leg2,
-        //     null,
-        //     (ball)=>{
-        //         this.ball.setVelocityY(0);
-        //         this.ball.setBounce(0.5)
-        // });
 
         this.physics.add.collider(
             this.ball, 
             this.player2,
-            null,
-            (ball)=>{
-                this.ball.setVelocityY(0);
-                this.ball.setBounce(0.5)
-        });
+            null
+        );
 
         this.physics.add.collider(this.player, this.player2);
-        //this.physics.add.collider(this.leg, this.leg2) MAYBE
 
        this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -450,34 +401,31 @@ class Level3 extends Phaser.Scene{
        this.add.tween({
         targets: p2,
         duration: 2000,
-        x: {from: this.game.config.width/3, to: this.game.config.width-300},
-        yoyo:true,
-        repeat: -1,
-        ease: 'quint.out',
-        // onYoyo(){
-        //      this.l2.x = this.p2.x +155;
-        //  }
-       })
-
-       this.add.tween({
-        targets: p2, 
-        duration: 2000,
-        y: {from: this.player2.y, to: this.player2.y+150},
+        x: {from: this.game.config.width/2, to: this.game.config.width-300},
         yoyo: true,
         repeat: -1,
         ease: 'quint.out'
        })
     }
     update(){
-        // this.physics.world.on('collide', () =>{
-        //      MAYBE THIS CAN BE WHERE I PLAY AUDIO
-        // })
+        this.physics.world.on('collide', (ball, player) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06)
+        })
+        this.physics.world.on('collide', (ball, leg) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06)
+        })
+    
+        this.physics.world.on('collide', (ball, player2) =>{
+            this.ball.setVelocityY(-555);
+            this.ball.setBounce(1.06);
+        })
         this.physics.world.on('overlap', () =>{
             this.scene.start('l3_done', {touches: this.touches});
         })
         
         this.leg.y = this.player.y+165;
-       // this.leg2.y = this.player2.y+165
 
         if(this.cursors.left.isDown){
            this.player.setVelocityX(-400);
@@ -515,10 +463,10 @@ class Level3_Done extends Phaser.Scene{
     }
     create(){
         this.cameras.main.setBackgroundColor('#228b22');
-        this.add.text(300, 400,"Number of Touches: " +this.touches).setFontSize(35);
+        this.add.text(300, 470,"Number of Touches: " +this.touches).setFontSize(35);
         this.add.text(this.game.config.width/3, 200, "LEVEL 3 COMPLETED!").setFontSize(65);
-        this.add.text(300, 300, "ICONIC! Keep doing what you’re doing and you’re going to go far. I promise! :-) /n Thank you for playing!!").setWordWrapWidth(1500).setFontSize(45);
-        this.add.text(300, 1000, "[Slide the ball to the left to restart!").setFontSize(35)
+        this.add.text(300, 300, "ICONIC! Keep doing what you’re doing and you’re going to go far. I promise! :-) \nThank you for playing!!").setWordWrapWidth(1500).setFontSize(45);
+        this.add.text(300, 1000, "[Slide the ball to the right to play again!]").setFontSize(35)
         this.g = this.add.circle(this.game.config.width-200, this.game.config.height-200, 50, 0x000000);
         this.b = this.add.circle(300, this.game.config.height-200, 30, 0xfffff);
         
@@ -541,7 +489,7 @@ class Level3_Done extends Phaser.Scene{
 
     update(){
         if(this.b.x == this.g.x){
-            this.scene.start('l1'); //change here, plz
+            this.scene.start('l1');
         }
     }
 }
@@ -573,12 +521,6 @@ class Click extends Phaser.Scene {
         super('click');
     }
     create() {
-        this.input.keyboard.on('keydown-' + "T", ()=>{
-            this.scene.start('l3');
-        })
-        this.input.keyboard.on('keydown-' + 'C', () =>{
-            this.scene.start('controls')
-        })
         this.cameras.main.setBackgroundColor('#228b22');
         this.add.text(655, 540, "Click to begin.").setFontSize(55);
         this.input.on('pointerdown', () => {
@@ -593,12 +535,9 @@ class Title extends Phaser.Scene {
         super('title');
     }
     preload() {
-        //this.load.audio('title', 'assets/title_screen.wav');
     }
     create() {
 
-        //let t = this.sound.add('title')
-        //t.play({ loop: true });
         this.cameras.main.setBackgroundColor('#228b22');
         this.add.text(655, 355, "Silly Soccer").setFontSize(55);
         let play = this.add.text(655, 540, "Play!").setFontSize(45);
@@ -636,7 +575,6 @@ class Title extends Phaser.Scene {
         });
     }
 }
-//MAKE THE CONTROLS SCREEN PLEASE
 class Controls extends Phaser.Scene{
     constructor(){
         super('controls');
@@ -647,7 +585,8 @@ class Controls extends Phaser.Scene{
         let content = [
             'Left Arrow Key: Move Left',
             'Right Arrow Key: Move Right',
-            'Spacebar: Jump'
+            'Spacebar: Jump',
+            'R key: Restart current level'
         ]
         this.add.text(355, 240, 'Objective: Control the soccer player to get the ball into the goal at the top of the screen!!').setFontSize(65).setWordWrapWidth(1500);
         this.add.text(355, 540, "CONTROLS:").setFontSize(55);
@@ -681,14 +620,11 @@ const game = new Phaser.Game({
     physics:{
         default: 'arcade',
         arcade: {
-            debug: true,
             gravity: {
-             //    x: 0,
                  y: 300
              }
         }
     },
     scene: [Click, Studio, Title, Controls, Level1, Level1_Done, Level2, Level2_Done, Level3, Level3_Done],
-    title: "Physics Demo",
-    //backgroundColor: "0x228b22"
+    title: "Physics Demo"
 });
