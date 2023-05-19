@@ -1,3 +1,4 @@
+//FIGURE OUT HOW TO GET AN ACCURATE COUNT FOR TOUCHES!!!!
 class Level1 extends Phaser.Scene{
     constructor(){
         super('l1')
@@ -87,7 +88,7 @@ class Level1 extends Phaser.Scene{
         }
 
         if(this.cursors.space.isDown && this.player.onFloor()){
-          this.player.setVelocityY(-400);
+          this.player.setVelocityY(-250);
         } 
         this.input.keyboard.on('keydown-'+'R',()=>{
             this.scene.start('test');
@@ -188,9 +189,12 @@ class Level2 extends Phaser.Scene{
         this.player,
         null,
         (ball, player)=>{
-            this.touches++;
-            // this.ball.setVelocityY(-555);
-            // this.ball.setBounce(1.1)
+            if(this.ball.y >= this.player.y){
+                this.touches++;
+                console.log(this.touches);
+                this.ball.setVelocityY(-555);
+                this.ball.setBounce(1.06)
+            }
         }
        );
 
@@ -199,9 +203,12 @@ class Level2 extends Phaser.Scene{
         this.leg,
         null,
         (ball, leg)=>{
-            this.touches++;
-            // this.ball.setVelocityY(-555);
-            // this.ball.setBounce(1.1)
+            if(this.ball.y >= this.leg.y){//this.ball.y >= this.player.y || this.ball.y >= this.leg.y){
+                this.touches++;
+                console.log(this.touches);
+                this.ball.setVelocityY(-555);
+                this.ball.setBounce(1.06)
+            }
         });
 
        this.cursors = this.input.keyboard.createCursorKeys();
@@ -217,14 +224,14 @@ class Level2 extends Phaser.Scene{
         ease: 'back.in'
        })
        this.touches = 0;
-       this.physics.world.on('collide', (ball, player) =>{
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.06)
-        })
-        this.physics.world.on('collide', (ball, leg) =>{
-            this.ball.setVelocityY(-555);
-            this.ball.setBounce(1.06)
-        })
+    //    this.physics.world.on('collide', (ball, player) =>{
+    //         this.ball.setVelocityY(-555);
+    //         this.ball.setBounce(1.06)
+    //     })
+    //     this.physics.world.on('collide', (ball, leg) =>{
+    //         this.ball.setVelocityY(-555);
+    //         this.ball.setBounce(1.06)
+    //     })
     }
     update(){
         // this.physics.world.on('collide', () =>{
@@ -250,7 +257,7 @@ class Level2 extends Phaser.Scene{
         }
 
         if(this.cursors.space.isDown && this.player.onFloor()){
-          this.player.setVelocityY(-400);
+          this.player.setVelocityY(-250);
         } 
 
         this.input.keyboard.on('keydown-'+'R',()=>{
@@ -381,8 +388,9 @@ class Level3 extends Phaser.Scene{
             // force.copy(distance).setLength(5000000 / distance.lengthSq()).limit(1000);
             // acceleration.copy(force).scale(1 / this.ball.mass);
             // this.ball.velocity.add(acceleration);
-            if(this.ball.y > this.player.y){
+            if(this.ball.y >= this.player.y){
             this.touches++;
+            console.log(this.touches);
             this.ball.setVelocityY(-555);
             this.ball.setBounce(1.06)
             }
@@ -394,8 +402,9 @@ class Level3 extends Phaser.Scene{
         this.leg,
         null,
         (ball, leg)=>{
-            if(this.ball.y > this.player.y || this.ball.y > this.leg){
+            if(this.ball.y >= this.leg.y){//this.ball.y >= this.player.y || this.ball.y >= this.leg.y){
             this.touches++;
+            console.log(this.touches);
             this.ball.setVelocityY(-555);
             this.ball.setBounce(1.06)
             }
@@ -483,7 +492,7 @@ class Level3 extends Phaser.Scene{
         }
 
         if(this.cursors.space.isDown && this.player.onFloor()){
-          this.player.setVelocityY(-400);
+          this.player.setVelocityY(-250);
         } 
 
         this.input.keyboard.on('keydown-'+'R',()=>{
@@ -508,7 +517,7 @@ class Level3_Done extends Phaser.Scene{
         this.cameras.main.setBackgroundColor('#228b22');
         this.add.text(300, 400,"Number of Touches: " +this.touches).setFontSize(35);
         this.add.text(this.game.config.width/3, 200, "LEVEL 3 COMPLETED!").setFontSize(65);
-        this.add.text(300, 300, "ICONIC! Keep doing what you’re doing and you’re going to go far. I promise! :-) Thank you for playing!!").setWordWrapWidth(1500).setFontSize(45);
+        this.add.text(300, 300, "ICONIC! Keep doing what you’re doing and you’re going to go far. I promise! :-) /n Thank you for playing!!").setWordWrapWidth(1500).setFontSize(45);
         this.add.text(300, 1000, "[Slide the ball to the left to restart!").setFontSize(35)
         this.g = this.add.circle(this.game.config.width-200, this.game.config.height-200, 50, 0x000000);
         this.b = this.add.circle(300, this.game.config.height-200, 30, 0xfffff);
