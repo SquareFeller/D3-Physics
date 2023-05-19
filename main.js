@@ -5,7 +5,18 @@ class Level1 extends Phaser.Scene {
     preload() {
 
     }
+    //strategy of keeping track of seconds and code was provided to me by my classmate and friend Nathaniel Chu
+    init(data){
+        this.seconds = data.seconds || 0;
+    }
     create() {
+        this.time.addEvent({
+            delay: 100,
+            loop: true,
+            callback: () => {
+                this.seconds+=0.1;
+            }
+        });
         this.cameras.main.setBackgroundColor('#228b22');
         let b = this.add.circle(300, 775, 35, 0xfffff);
         let ball_obj = this.physics.add.existing(b, 0);
@@ -58,7 +69,6 @@ class Level1 extends Phaser.Scene {
             (ball, leg) => {
                 if (this.ball.y <= this.leg.y) {
                     this.touches++;
-                    console.log(this.touches);
                 }
             });
 
@@ -72,7 +82,7 @@ class Level1 extends Phaser.Scene {
             this.ball.setBounce(1.06)
         })
         this.physics.world.on('overlap', () => {
-            this.scene.start('l1_done', { touches: this.touches });
+            this.scene.start('l1_done', { touches: this.touches, seconds: this.seconds });
         })
 
         this.leg.y = this.player.y + 165;
@@ -109,10 +119,11 @@ class Level1_Done extends Phaser.Scene {
     }
     init(data) {
         this.touches = data.touches;
+        this.seconds = data.seconds;
     }
     create() {
         this.cameras.main.setBackgroundColor('#228b22');
-        this.add.text(300, 400, "Number of Touches: " + this.touches).setFontSize(35);
+        this.add.text(300, 400, "Time: " + this.seconds).setFontSize(35);
         this.add.text(this.game.config.width / 3, 200, "LEVEL 1 COMPLETED!").setFontSize(65);
         this.add.text(300, 300, "You’re doing great, kid! A recruiter even noticed your skills. Show them what you got!!").setWordWrapWidth(1500).setFontSize(45);
         this.add.text(300, 1000, "[Slide the ball to the right to keep going!]").setFontSize(35)
@@ -151,7 +162,17 @@ class Level2 extends Phaser.Scene {
     preload() {
 
     }
+    init(data){
+        this.seconds = data.seconds || 0;
+    }
     create() {
+        this.time.addEvent({
+            delay: 100,
+            loop: true,
+            callback: () => {
+                this.seconds+=0.1;
+            }
+        });
         this.cameras.main.setBackgroundColor('#228b22');
         let b = this.add.circle(300, 775, 35, 0xfffff);
         let ball_obj = this.physics.add.existing(b, 0);
@@ -231,7 +252,7 @@ class Level2 extends Phaser.Scene {
         })
 
         this.physics.world.on('overlap', () => {
-            this.scene.start('l2_done', { touches: this.touches });
+            this.scene.start('l2_done', { touches: this.touches, seconds: this.seconds});
         })
 
         this.leg.y = this.player.y + 165;
@@ -270,10 +291,11 @@ class Level2_Done extends Phaser.Scene {
     }
     init(data) {
         this.touches = data.touches;
+        this.seconds = data.seconds;
     }
     create() {
         this.cameras.main.setBackgroundColor('#228b22');
-        this.add.text(300, 400, "Number of Touches: " + this.touches).setFontSize(35);
+        this.add.text(300, 400, "Time: " + this.seconds).setFontSize(35);
         this.add.text(this.game.config.width / 3, 200, "LEVEL 2 COMPLETED!").setFontSize(65);
         this.add.text(300, 300, "You’re doing amazing!! You’re off to the big leagues now, kid!").setWordWrapWidth(1500).setFontSize(45);
         this.add.text(300, 1000, "[Slide the ball to the right to keep going!]").setFontSize(35)
@@ -313,7 +335,17 @@ class Level3 extends Phaser.Scene {
     preload() {
 
     }
+    init(data){
+        this.seconds = data.seconds || 0;
+    }
     create() {
+        this.time.addEvent({
+            delay: 100,
+            loop: true,
+            callback: () => {
+                this.seconds+=0.1;
+            }
+        });
         this.cameras.main.setBackgroundColor('#228b22');
         let b = this.add.circle(300, 775, 35, 0xfffff);
         let ball_obj = this.physics.add.existing(b, 0);
@@ -422,7 +454,7 @@ class Level3 extends Phaser.Scene {
             this.ball.setBounce(1.06);
         })
         this.physics.world.on('overlap', () => {
-            this.scene.start('l3_done', { touches: this.touches });
+            this.scene.start('l3_done', { touches: this.touches, seconds: this.seconds });
         })
 
         this.leg.y = this.player.y + 165;
@@ -460,10 +492,11 @@ class Level3_Done extends Phaser.Scene {
     }
     init(data) {
         this.touches = data.touches;
+        this.seconds = data.seconds;
     }
     create() {
         this.cameras.main.setBackgroundColor('#228b22');
-        this.add.text(300, 470, "Number of Touches: " + this.touches).setFontSize(35);
+        this.add.text(300, 470, "Time: " + this.seconds).setFontSize(35);
         this.add.text(this.game.config.width / 3, 200, "LEVEL 3 COMPLETED!").setFontSize(65);
         this.add.text(300, 300, "ICONIC! Keep doing what you’re doing and you’re going to go far. I promise! :-) \nThank you for playing!!").setWordWrapWidth(1500).setFontSize(45);
         this.add.text(300, 1000, "[Slide the ball to the right to play again!]").setFontSize(35)
